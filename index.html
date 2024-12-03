@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="bootstrap-5.3.3-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&" />
+    <title>Document</title>
+    <style>
+        .slides{
+            width: 100%;
+            display: none;
+        }
+        #image{
+           aspect-ratio: 1 / 1;
+           width: 50%;
+           display: none;
+        }
+    </style>
+</head>
+<body>
+    <main class="p-3 m-auto w-25 rounded shadow">
+        <input type="file" id="inputer" onchange="pickPics()">
+        <div class="slides mt-4 m-auto">
+            <button class="btn w-25" onclick="previous()">
+                <span class="material-symbols-outlined">chevron_left</span>
+            </button>
+            <img src="" alt="" id="image">
+            <button class="btn" onclick="next()">
+                <span class="material-symbols-outlined">chevron_right</span>
+            </button>
+        </div>
+    </main>
+    <script src="bootstrap-5.3.3-dist/js/bootstrap.bundle.js"></script>
+</body>
+</html>
+<script>
+    let images = document.getElementById('image')
+    let imageArr = JSON.parse(localStorage.getItem("images")) || []
+    let imageIndex = 0
+    let slides = document.querySelector('.slides')
+
+    let pickPics = () => {
+        let myInput = document.getElementById('inputer')
+        console.log(myInput.files[0]);
+        let files = myInput.files[0] 
+
+        if (files.size > 1 * 1024 * 1024) {
+            alert('Image must be less than 1mb')
+            return;
+        }
+        
+        let reader = new FileReader()
+        if (files) {
+            reader.readAsDataURL(files)
+        } 
+
+        reader.addEventListener('load' , (e) => {
+            let dataUrl = e.target.result
+            image.src = dataUrl
+            slides.style.display = "flex"
+            images.style.display = "block"
+            console.log(dataUrl);
+
+
+            imageArr.push(dataUrl)
+            if (imageArr.length > 5) {
+                alert('Pictures must not be more than 5')
+                imageArr.splice(5 , 1)
+            }
+
+            
+            localStorage.setItem('images' ,  JSON.stringify(imageArr))
+            console.log(imageArr);  
+        })
+    }
+
+    let updateImgSrc = () => {
+        images.src = imageArr[imageIndex]
+    }
+
+    let next = () => {
+        if (imageIndex === imageArr.length - 1) {
+            imageIndex = 0
+        } else {
+                imageIndex++
+            }
+            updateImgSrc()
+            localStorage.setItem('images' ,  JSON.stringify(imageArr))
+    }
+
+    let previous = () => {
+        if (imageIndex === 0) {
+            imageIndex = imageArr.length - 1
+        } else {
+            imageIndex--
+        }
+        updateImgSrc()
+        localStorage.setItem('images' ,  JSON.stringify(imageArr))
+    }
+</script>
