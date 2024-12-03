@@ -9,7 +9,7 @@
     <style>
         .slides{
             width: 100%;
-            display: none;
+            /* display: none; */
         }
         #image{
            aspect-ratio: 1 / 1;
@@ -98,4 +98,12 @@
         updateImgSrc()
         localStorage.setItem('images' ,  JSON.stringify(imageArr))
     }
+    
+    window.onload = () => {
+        if (imageArr.length > 0) {
+            images.src = imageArr[0];
+            slides.style.display = "flex";
+            images.style.display = "block";
+        }
+    };
 </script>
